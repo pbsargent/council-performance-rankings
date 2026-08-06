@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Search and compare national Scouting council membership rankings.">
+  <title>National Rankings · Council Performance Rankings</title>
+  <link rel="stylesheet" href="assets/dashboard.css">
+</head>
+<body data-page="rankings">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Council ranking navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">CR</span><span>Council<br>Rankings</span></a>
+      <nav>
+        <a href="index.html">Overview</a>
+        <a class="active" href="rankings.html">National Rankings</a>
+        <a href="unit-health.html">Unit Health</a>
+        <a href="about.html">Methodology</a>
+      </nav>
+      <div class="sidebar-note"><span>Workbook refresh</span><strong data-source-date>Loading…</strong></div>
+    </aside>
+    <main>
+      <header class="hero compact-hero">
+        <div><p class="eyebrow">National membership table</p><h1>National Rankings</h1><p class="lede">Search, filter, and sort every council using consistent membership calculations.</p></div>
+      </header>
+
+      <section class="toolbar" aria-label="Ranking filters">
+        <label class="control"><span>Search council</span><input id="rankingSearch" type="search" placeholder="Name or council number"></label>
+        <label class="control"><span>Comparison scope</span><select id="rankingScope"><option value="all">All councils</option><option value="peers">Comparable to focus council</option></select></label>
+        <label class="control"><span>Focus council</span><select id="rankingCouncil"></select></label>
+        <label class="control"><span>Sort by</span><select id="rankingSort"><option value="yoy_rank">YOY rank</option><option value="yoy_pct_desc">YOY growth</option><option value="current_youth_desc">Current youth</option><option value="year_end_rank">Year-end rank</option><option value="name">Council name</option></select></label>
+      </section>
+
+      <section class="kpi-grid compact-kpis" id="rankingKpis"></section>
+      <section class="panel table-panel">
+        <div class="panel-head"><div><p class="section-kicker">Council scorecard</p><h2>Membership Performance</h2></div><span class="count-pill" id="rankingCount"></span></div>
+        <div class="table-wrap tall"><table class="ranking-table"><thead><tr><th>YOY Rank</th><th>Council</th><th class="num">Units</th><th class="num">Current Youth</th><th class="num">Prior Youth</th><th class="num">YOY Change</th><th class="num">YOY %</th><th class="num">YE ’25 %</th><th>View</th></tr></thead><tbody id="rankingRows"></tbody></table></div>
+      </section>
+    </main>
+  </div>
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>

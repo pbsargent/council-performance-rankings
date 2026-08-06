@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Methodology and source notes for the council ranking dashboard.">
+  <title>Methodology · Council Performance Rankings</title>
+  <link rel="stylesheet" href="assets/dashboard.css">
+</head>
+<body data-page="about">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Council ranking navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">CR</span><span>Council<br>Rankings</span></a>
+      <nav>
+        <a href="index.html">Overview</a>
+        <a href="rankings.html">National Rankings</a>
+        <a href="unit-health.html">Unit Health</a>
+        <a class="active" href="about.html">Methodology</a>
+      </nav>
+      <div class="sidebar-note"><span>Workbook refresh</span><strong data-source-date>Loading…</strong></div>
+    </aside>
+    <main>
+      <header class="hero compact-hero">
+        <div><p class="eyebrow">Transparent by design</p><h1>Methodology</h1><p class="lede">What the dashboard publishes, how each comparison is calculated, and what to keep in mind.</p></div>
+      </header>
+
+      <section class="method-grid">
+        <article class="panel"><p class="section-kicker">Source</p><h2>Workbook snapshot</h2><p id="methodSource">Loading source metadata…</p></article>
+        <article class="panel"><p class="section-kicker">Privacy</p><h2>Aggregate data only</h2><p>The published JSON contains council-level totals and rates. Unit-level worksheet rows and local filesystem paths are deliberately excluded.</p></article>
+        <article class="panel"><p class="section-kicker">Growth</p><h2>Consistent denominator</h2><p>Year-over-year growth is calculated as <code>(current youth − prior youth) ÷ prior youth</code>. Year-end change uses 2025 year-end youth as its baseline.</p></article>
+        <article class="panel"><p class="section-kicker">Ranking</p><h2>Higher growth ranks first</h2><p>Rank 1 is the largest positive percentage change. Ties receive the same competition rank; the next rank advances by the number of tied councils.</p></article>
+        <article class="panel"><p class="section-kicker">Peers</p><h2>Comparable scale</h2><p>Peers are other councils whose unit count and current youth membership are each between 80% and 120% of the focus council.</p></article>
+        <article class="panel"><p class="section-kicker">Unit metrics</p><h2>Workbook-defined signals</h2><p>Unit health distributions and driver rates come from the workbook’s All, Pack, Troop, Crew, Post, and Ship metric tabs. National benchmarks are unit-weighted.</p></article>
+        <article class="panel"><p class="section-kicker">Data grain</p><h2>Two populations</h2><p>The ranking tabs and unit-metric tabs do not share identical aggregate youth and unit totals. Overview and Rankings use the council membership grain; Unit Health remains within the metric-tab population.</p></article>
+        <article class="panel"><p class="section-kicker">Retention model</p><h2>Values may exceed 100%</h2><p>Retention follows the workbook model used by the Other Council Dashboards project. It is not capped at 100%, so valid source values above 100% are displayed as provided.</p></article>
+      </section>
+
+      <section class="panel source-panel">
+        <div><p class="section-kicker">Interpretation</p><h2>Use rankings as a starting point</h2></div>
+        <p>Rankings describe relative movement in this workbook snapshot; they do not by themselves explain causality, seasonal timing, local market conditions, or data-quality differences. Pair them with local operating context before making decisions.</p>
+      </section>
+    </main>
+  </div>
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>

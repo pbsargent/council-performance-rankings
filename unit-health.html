@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Council unit health and program metric comparison.">
+  <title>Unit Health · Council Performance Rankings</title>
+  <link rel="stylesheet" href="assets/dashboard.css">
+</head>
+<body data-page="unit-health">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Council ranking navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">CR</span><span>Council<br>Rankings</span></a>
+      <nav>
+        <a href="index.html">Overview</a>
+        <a href="rankings.html">National Rankings</a>
+        <a class="active" href="unit-health.html">Unit Health</a>
+        <a href="about.html">Methodology</a>
+      </nav>
+      <div class="sidebar-note"><span>Workbook refresh</span><strong data-source-date>Loading…</strong></div>
+    </aside>
+    <main>
+      <header class="hero compact-hero">
+        <div><p class="eyebrow">Operational performance</p><h1>Unit Health</h1><p class="lede">Compare unit metric distribution and program drivers against the national workbook.</p></div>
+      </header>
+
+      <section class="toolbar two-up" aria-label="Unit health filters">
+        <label class="control"><span>Council</span><select id="healthCouncil"></select></label>
+        <label class="control"><span>Program</span><select id="programSelect"><option>All Units</option><option>Packs</option><option>Troops</option><option>Crews</option><option>Posts</option><option>Ships</option></select></label>
+      </section>
+
+      <section class="kpi-grid" id="healthKpis"></section>
+
+      <section class="focus-grid">
+        <section class="panel">
+          <div class="panel-head"><div><p class="section-kicker">Health mix</p><h2>Unit Metric Distribution</h2></div><span class="count-pill" id="healthProgramLabel"></span></div>
+          <div id="metricMix" class="mix-chart"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><p class="section-kicker">National comparison</p><h2>Program Benchmark</h2></div></div>
+          <div class="comparison-list" id="healthComparison"></div>
+        </section>
+      </section>
+
+      <section class="dashboard-grid">
+        <section class="panel wide">
+          <div class="panel-head"><div><p class="section-kicker">Performance drivers</p><h2>Unit Capability Rates</h2></div></div>
+          <div class="chart-list" id="capabilityChart"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head compact"><div><p class="section-kicker">BeAScout readiness</p><h2>PIN Profile</h2></div></div>
+          <div class="metric-stack" id="pinProfile"></div>
+        </section>
+      </section>
+      <section class="panel source-panel">
+        <div><p class="section-kicker">Grain note</p><h2>Unit-metric population</h2></div>
+        <p>Values on this page come from the workbook’s program metric tabs. Those tabs use their own unit-level population and do not necessarily reconcile to the membership totals used for National Rankings.</p>
+      </section>
+    </main>
+  </div>
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>

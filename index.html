@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Interactive national Scouting council performance rankings and peer comparisons.">
+  <title>Council Performance Rankings</title>
+  <link rel="stylesheet" href="assets/dashboard.css">
+</head>
+<body data-page="overview">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Council ranking navigation">
+      <a class="brand" href="index.html"><span class="brand-mark">CR</span><span>Council<br>Rankings</span></a>
+      <nav>
+        <a class="active" href="index.html">Overview</a>
+        <a href="rankings.html">National Rankings</a>
+        <a href="unit-health.html">Unit Health</a>
+        <a href="about.html">Methodology</a>
+      </nav>
+      <div class="sidebar-note"><span>Workbook refresh</span><strong data-source-date>Loading…</strong></div>
+    </aside>
+    <main>
+      <header class="hero">
+        <div>
+          <p class="eyebrow">National council intelligence</p>
+          <h1>Council Performance Rankings</h1>
+          <p class="lede">A web-first view of membership movement, national standing, comparable councils, and unit health.</p>
+        </div>
+        <div class="hero-actions">
+          <label class="control light"><span>Focus council</span><select id="councilSelect" aria-label="Focus council"></select></label>
+          <p class="filter-note" id="focusNote">Loading workbook data…</p>
+        </div>
+      </header>
+
+      <section class="kpi-grid" id="overviewKpis" aria-label="Selected council metrics"></section>
+
+      <section class="focus-grid">
+        <section class="panel">
+          <div class="panel-head"><div><p class="section-kicker">Peer set</p><h2 id="peerTitle">Comparable councils</h2></div><span class="count-pill" id="peerCount"></span></div>
+          <p class="panel-intro">Councils within ±20% of the selected council’s unit count and current youth membership.</p>
+          <div class="chart-list" id="peerChart"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><p class="section-kicker">Today’s read</p><h2>Signals to Watch</h2></div></div>
+          <div class="signal-list" id="signals"></div>
+        </section>
+      </section>
+
+      <section class="dashboard-grid">
+        <section class="panel wide">
+          <div class="panel-head"><div><p class="section-kicker">National movement</p><h2>Leaders in Year-over-Year Growth</h2></div><a class="detail-link" href="rankings.html">Explore all councils</a></div>
+          <div class="table-wrap"><table><thead><tr><th>Rank</th><th>Council</th><th class="num">Youth</th><th class="num">Change</th><th class="num">Growth</th></tr></thead><tbody id="growthRows"></tbody></table></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head compact"><div><p class="section-kicker">National context</p><h2>Across the Workbook</h2></div></div>
+          <div class="metric-stack" id="nationalContext"></div>
+        </section>
+      </section>
+
+      <section class="panel source-panel">
+        <div><p class="section-kicker">Source</p><h2>Workbook and calculation basis</h2></div>
+        <p id="sourceSummary">Loading source metadata…</p>
+      </section>
+    </main>
+  </div>
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>
