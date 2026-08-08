@@ -35,6 +35,8 @@ def main() -> int:
         failures.append(f"Unexpected council count: {len(councils)}")
     if selected["council"] != data["metadata"]["selected_council"]:
         failures.append("Selected council metadata does not match selected record")
+    if not data["metadata"].get("source_url", "").startswith("https://1drv.ms/"):
+        failures.append("Source workbook URL is missing or is not a OneDrive share link")
     if selected["council"] == "Capitol Area Council 564" and len(data["peers"]) != 12:
         failures.append(f"Expected 12 corrected Capitol Area peers, found {len(data['peers'])}")
 

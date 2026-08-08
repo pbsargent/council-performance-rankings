@@ -21,6 +21,7 @@ REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PKG_REL = "http://schemas.openxmlformats.org/package/2006/relationships"
 NS = {"x": MAIN, "r": REL}
 CHICAGO = ZoneInfo("America/Chicago")
+SOURCE_WORKBOOK_URL = "https://1drv.ms/x/c/da89e4b29f338fb5/IQDfPxTsKP3iSZCztHQA9barAQgefxPyd_oJgNZIF1ZPbYA?e=8wD2Zu"
 
 
 def q(tag: str) -> str:
@@ -357,6 +358,7 @@ def build_payload(source: Path) -> dict[str, Any]:
         "metadata": {
             "title": "Council Performance Rankings",
             "source_name": source.name,
+            "source_url": SOURCE_WORKBOOK_URL,
             "source_downloaded_at": downloaded.isoformat(),
             "generated_at": generated.isoformat(),
             "selected_council": selected_name,

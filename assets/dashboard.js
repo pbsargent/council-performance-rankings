@@ -64,6 +64,11 @@ function updateSourceDates(data) {
   document.querySelectorAll("[data-source-date]").forEach((element) => { element.textContent = sourceDate; });
 }
 
+function sourceLink(data) {
+  const url = escapeHtml(data.metadata.source_url);
+  return `<a class="source-link" href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+}
+
 function renderOverview(data, selected) {
   const peers = peerSet(data, selected);
   const percentile = Math.round((1 - (selected.yoy_rank - 1) / Math.max(1, data.national.council_count - 1)) * 100);
@@ -119,7 +124,7 @@ function renderOverview(data, selected) {
     metricLine("Councils growing", `${formatNumber(data.national.positive_growth_councils)} of ${formatNumber(data.national.council_count)}`),
   ].join("");
 
-  document.getElementById("sourceSummary").textContent = `${data.metadata.source_name}, downloaded ${dateFmt.format(new Date(data.metadata.source_downloaded_at))}. Growth rates and ranks are recalculated from the workbook’s cached current, prior-year, and 2025 year-end council totals.`;
+  document.getElementById("sourceSummary").innerHTML = `${sourceLink(data)}<span>${escapeHtml(data.metadata.source_name)}, downloaded ${escapeHtml(dateFmt.format(new Date(data.metadata.source_downloaded_at)))}. Growth rates and ranks are recalculated from the workbook’s cached current, prior-year, and 2025 year-end council totals.</span>`;
 }
 
 function initOverview(data) {
@@ -248,7 +253,7 @@ function initHealth(data) {
 }
 
 function initAbout(data) {
-  document.getElementById("methodSource").textContent = `${data.metadata.source_name} was downloaded ${dateFmt.format(new Date(data.metadata.source_downloaded_at))}. The site data was generated ${dateFmt.format(new Date(data.metadata.generated_at))} from cached workbook values.`;
+  document.getElementById("methodSource").innerHTML = `${sourceLink(data)}<span>${escapeHtml(data.metadata.source_name)} was downloaded ${escapeHtml(dateFmt.format(new Date(data.metadata.source_downloaded_at)))}. The site data was generated ${escapeHtml(dateFmt.format(new Date(data.metadata.generated_at)))} from cached workbook values.</span>`;
 }
 
 function showError(error) {
