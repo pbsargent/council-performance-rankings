@@ -82,7 +82,7 @@ function renderOverview(data, selected) {
     kpiCard("Peer set", formatNumber(peers.length), "±20% units and current youth", "teal"),
   ].join("");
 
-  document.getElementById("peerTitle").textContent = `Comparable to ${selected.council.replace(/\s\d{3}$/, "")}`;
+  document.getElementById("peerTitle").textContent = `${selected.council.replace(/\s\d{3}$/, "")} compared with peers`;
   document.getElementById("peerCount").textContent = `${peers.length} peers`;
   const peerRows = [...peers, selected].sort((a, b) => b.yoy_pct - a.yoy_pct || a.council.localeCompare(b.council));
   const maxAbs = Math.max(...peerRows.map((record) => Math.abs(record.yoy_pct || 0)), .01);
