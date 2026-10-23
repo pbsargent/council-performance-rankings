@@ -3,10 +3,11 @@
     "title": "Council Performance Rankings",
     "source_name": "Councils Ranked.xlsx",
     "source_url": "https://1drv.ms/x/c/da89e4b29f338fb5/IQDfPxTsKP3iSZCztHQA9barAQgefxPyd_oJgNZIF1ZPbYA?e=8wD2Zu",
-    "source_downloaded_at": "2026-10-22T22:41:34.114955-05:00",
-    "generated_at": "2026-10-22T22:45:24.581179-05:00",
+    "source_sha256": "c5d1fd3a0af1edcb8648929d11217f086d0032377422dbd8c399a141486c9a2e",
+    "source_downloaded_at": "2026-10-23T04:18:51.116542+00:00",
+    "generated_at": "2026-10-22T23:19:13.068985-05:00",
     "selected_council": "Capitol Area Council 564",
-    "methodology_version": "1.0",
+    "methodology_version": "1.1",
     "privacy": "Council-level aggregates only; unit-level workbook rows are not published."
   },
   "national": {
