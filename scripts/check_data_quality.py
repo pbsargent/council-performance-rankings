@@ -76,6 +76,29 @@ def main() -> int:
             "Repair the affected source rows and regenerate the site.",
         ))
 
+    tay_missing = [record["council"] for record in councils if record.get("tay") in (None, 0)]
+    tay_rate_issues = [
+        {"council": record["council"], "tay_pct": record.get("tay_pct")}
+        for record in councils
+        if record.get("tay") not in (None, 0) and (record.get("tay_pct") is None or not 0 <= record["tay_pct"] <= 1)
+    ]
+    if tay_rate_issues:
+        findings.append(issue(
+            "high",
+            "TAY penetration is missing or outside its expected 0–100% range",
+            {"count": len(tay_rate_issues), "samples": tay_rate_issues[:20]},
+            "TAY comparisons and peer matching would be unreliable.",
+            "Review the TAY and current-youth values in the Councils worksheet.",
+        ))
+    if tay_missing:
+        findings.append(issue(
+            "medium",
+            "TAY is unavailable for a subset of council rows",
+            {"count": len(tay_missing), "councils": tay_missing},
+            "Those councils cannot have a TAY penetration rate, TAY rank, or TAY-matched peers.",
+            "Preserve the source blanks and limit TAY comparisons to councils with a supplied TAY value.",
+        ))
+
     join_summary = {}
     range_issues = []
     count_reconciliation_issues = []
@@ -178,6 +201,8 @@ def main() -> int:
         "checks": {
             "identifier_uniqueness": "pass" if not duplicate_numbers else "fail",
             "core_count_validity": "pass" if not invalid_core else "fail",
+            "tay_penetration_validity": "pass" if not tay_rate_issues else "fail",
+            "tay_coverage": {"covered_councils": len(councils) - len(tay_missing), "missing_councils": tay_missing},
             "unit_metric_join_coverage": join_summary,
             "unit_metric_range_issues": len(range_issues),
             "unit_bucket_reconciliation_issues": len(count_reconciliation_issues),

@@ -28,13 +28,13 @@
         <label class="control"><span>Search council</span><input id="rankingSearch" type="search" placeholder="Name or council number"></label>
         <label class="control"><span>Comparison scope</span><select id="rankingScope"><option value="all">All councils</option><option value="peers">Comparable to focus council</option></select></label>
         <label class="control"><span>Focus council</span><select id="rankingCouncil"></select></label>
-        <label class="control"><span>Sort by</span><select id="rankingSort"><option value="yoy_rank">YOY rank</option><option value="yoy_pct_desc">YOY growth</option><option value="current_youth_desc">Current youth</option><option value="year_end_rank">Year-end rank</option><option value="name">Council name</option></select></label>
+        <label class="control"><span>Sort by</span><select id="rankingSort"><option value="yoy_rank">YOY rank</option><option value="yoy_pct_desc">YOY growth</option><option value="current_youth_desc">Current youth</option><option value="year_end_rank">Year-end rank</option><option value="tay_rank">TAY rank</option><option value="tay_pct_desc">TAY penetration</option><option value="name">Council name</option></select></label>
       </section>
 
       <section class="kpi-grid compact-kpis" id="rankingKpis"></section>
       <section class="panel table-panel">
         <div class="panel-head"><div><p class="section-kicker">Council scorecard</p><h2>Membership Performance</h2></div><span class="count-pill" id="rankingCount"></span></div>
-        <div class="table-wrap tall"><table class="ranking-table"><thead><tr><th>YOY Rank</th><th>Council</th><th class="num">Units</th><th class="num">Current Youth</th><th class="num">Prior Youth</th><th class="num">YOY Change</th><th class="num">YOY %</th><th class="num">YE ’25 %</th><th>View</th></tr></thead><tbody id="rankingRows"></tbody></table></div>
+        <div class="table-wrap tall"><table class="ranking-table"><thead><tr><th>YOY Rank</th><th>Council</th><th class="num">Units</th><th class="num">Current Youth</th><th class="num">Prior Youth</th><th class="num">YOY Change</th><th class="num">YOY %</th><th class="num">YE ’25 %</th><th class="num">TAY %</th><th class="num">TAY Rank</th><th>View</th></tr></thead><tbody id="rankingRows"></tbody></table></div>
       </section>
     </main>
   </div>

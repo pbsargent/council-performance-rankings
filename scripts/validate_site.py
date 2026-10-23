@@ -37,13 +37,21 @@ def main() -> int:
         failures.append("Selected council metadata does not match selected record")
     if not data["metadata"].get("source_url", "").startswith("https://1drv.ms/"):
         failures.append("Source workbook URL is missing or is not a OneDrive share link")
-    if selected["council"] == "Capitol Area Council 564" and len(data["peers"]) != 12:
-        failures.append(f"Expected 12 corrected Capitol Area peers, found {len(data['peers'])}")
 
     expected_rank = {
         record["council"]: index
         for index, record in enumerate(
             sorted(councils, key=lambda item: (-item["yoy_pct"], item["council"])), 1
+        )
+    }
+    expected_tay_rank = {
+        record["council"]: index
+        for index, record in enumerate(
+            sorted(
+                (item for item in councils if item.get("tay_pct") is not None),
+                key=lambda item: (-item["tay_pct"], item["council"]),
+            ),
+            1,
         )
     }
     for record in councils:
@@ -54,6 +62,17 @@ def main() -> int:
         if recalculated is not None and abs(recalculated - record["yoy_pct"]) > 1e-12:
             failures.append(f"YOY percentage mismatch: {record['council']}")
             break
+        if record.get("tay") not in (None, 0):
+            if record.get("tay_pct") is None:
+                failures.append(f"Missing TAY percentage: {record['council']}")
+                break
+            tay_recalculated = record["current_youth"] / record["tay"]
+            if abs(tay_recalculated - record["tay_pct"]) > 1e-12:
+                failures.append(f"TAY percentage mismatch: {record['council']}")
+                break
+            if record.get("tay_rank") != expected_tay_rank[record["council"]]:
+                failures.append(f"TAY rank mismatch: {record['council']}")
+                break
 
     html_text = "\n".join((ROOT / name).read_text(encoding="utf-8") for name in REQUIRED if name.endswith(".html"))
     if "/Users/" in html_text or "file://" in html_text:

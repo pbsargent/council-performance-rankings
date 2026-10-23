@@ -159,6 +159,7 @@ def extract_councils(reader: XlsxReader, sheet_name: str) -> tuple[list[dict[str
         current = clean_number(cells.get(4))
         prior = clean_number(cells.get(5))
         year_end = clean_number(cells.get(9))
+        tay = clean_number(cells.get(15))
         units = clean_number(cells.get(3))
         if current is None or prior is None or units is None:
             continue
@@ -178,10 +179,13 @@ def extract_councils(reader: XlsxReader, sheet_name: str) -> tuple[list[dict[str
                 "year_end_youth": year_end,
                 "year_end_delta": ye_delta,
                 "year_end_pct": ratio(ye_delta, year_end),
+                "tay": tay,
+                "tay_pct": ratio(current, tay),
             }
         )
     rank_desc(records, "yoy_pct", "yoy_rank")
     rank_desc(records, "year_end_pct", "year_end_rank")
+    rank_desc(records, "tay_pct", "tay_rank")
     return records, selected
 
 
@@ -334,12 +338,18 @@ def build_payload(source: Path) -> dict[str, Any]:
         if record["council"] != selected_name
         and 0.8 <= float(record["units"]) / float(selected["units"]) <= 1.2
         and 0.8 <= float(record["current_youth"]) / float(selected["current_youth"]) <= 1.2
+        and record.get("tay") not in (None, 0)
+        and selected.get("tay") not in (None, 0)
+        and 0.8 <= float(record["tay"]) / float(selected["tay"]) <= 1.2
     ]
     peers.sort(key=lambda record: (-record["yoy_pct"], record["council"]))
 
     national_current = sum_numbers(councils, "current_youth")
     national_prior = sum_numbers(councils, "prior_youth")
     national_year_end = sum_numbers(councils, "year_end_youth")
+    tay_records = [record for record in councils if record.get("tay") not in (None, 0)]
+    national_tay = sum_numbers(tay_records, "tay")
+    national_tay_current = sum_numbers(tay_records, "current_youth")
     national_delta = national_current - national_prior
     national_ye_delta = national_current - national_year_end
     source_stat = source.stat()
@@ -375,6 +385,10 @@ def build_payload(source: Path) -> dict[str, Any]:
             "year_end_youth": national_year_end,
             "year_end_delta": national_ye_delta,
             "year_end_pct": ratio(national_ye_delta, national_year_end),
+            "tay": national_tay,
+            "tay_current_youth": national_tay_current,
+            "tay_pct": ratio(national_tay_current, national_tay),
+            "tay_covered_councils": len(tay_records),
             "positive_growth_councils": sum(1 for record in councils if (record.get("yoy_pct") or 0) > 0),
         },
         "selected": selected_payload,

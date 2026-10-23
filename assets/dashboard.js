@@ -14,6 +14,7 @@ const formatPct = (value) => value == null ? "—" : pct.format(value);
 const formatPct0 = (value) => value == null ? "—" : pct0.format(value);
 const formatSigned = (value) => value == null ? "—" : `${value > 0 ? "+" : ""}${nf.format(Math.round(value))}`;
 const formatSignedPct = (value) => value == null ? "—" : `${value > 0 ? "+" : ""}${pct.format(value)}`;
+const formatRank = (value) => value == null ? "—" : `#${nf.format(value)}`;
 const tone = (value, good = 0, warn = -0.05) => value >= good ? "good" : value >= warn ? "warning" : "danger";
 const classForValue = (value) => value > 0 ? "positive" : value < 0 ? "negative" : "muted";
 const getQueryCouncil = () => new URLSearchParams(window.location.search).get("council");
@@ -46,7 +47,8 @@ function peerSet(data, selected) {
   return data.councils
     .filter((record) => record.council !== selected.council
       && record.units / selected.units >= 0.8 && record.units / selected.units <= 1.2
-      && record.current_youth / selected.current_youth >= 0.8 && record.current_youth / selected.current_youth <= 1.2)
+      && record.current_youth / selected.current_youth >= 0.8 && record.current_youth / selected.current_youth <= 1.2
+      && record.tay / selected.tay >= 0.8 && record.tay / selected.tay <= 1.2)
     .sort((a, b) => b.yoy_pct - a.yoy_pct || a.council.localeCompare(b.council));
 }
 
@@ -78,8 +80,8 @@ function renderOverview(data, selected) {
     kpiCard("YOY growth", formatSignedPct(selected.yoy_pct), `National: ${formatSignedPct(data.national.yoy_pct)}`, tone(selected.yoy_pct)),
     kpiCard("National rank", `#${selected.yoy_rank}`, `Top ${100 - percentile}% by growth`, "teal"),
     kpiCard("Registered units", formatNumber(selected.units), `${(selected.current_youth / selected.units).toFixed(1)} youth per unit`),
-    kpiCard("YE ’25 change", formatSignedPct(selected.year_end_pct), `${formatSigned(selected.year_end_delta)} youth`, tone(selected.year_end_pct)),
-    kpiCard("Peer set", formatNumber(peers.length), "±20% units and current youth", "teal"),
+    kpiCard("TAY penetration", formatPct(selected.tay_pct), `Rank ${formatRank(selected.tay_rank)} where available`, "teal"),
+    kpiCard("Peer set", formatNumber(peers.length), "±20% units, youth, and TAY", "teal"),
   ].join("");
 
   document.getElementById("peerTitle").textContent = `${selected.council.replace(/\s\d{3}$/, "")} compared with peers`;
@@ -107,6 +109,10 @@ function renderOverview(data, selected) {
       body: peerAverage == null ? "No councils met both scale bands." : `The ${peers.length}-council peer average is ${formatSignedPct(peerAverage)}.`,
     },
     {
+      title: selected.tay_pct == null ? "TAY context unavailable" : `TAY penetration ranks ${formatRank(selected.tay_rank)}`,
+      body: selected.tay_pct == null ? "The workbook does not supply a TAY value for this council." : `${formatNumber(selected.current_youth)} current youth represent ${formatPct(selected.tay_pct)} of ${formatNumber(selected.tay)} TAY in the workbook's market context.`,
+    },
+    {
       title: unitHealth ? `${formatPct0(unitHealth.metric_low_rate)} of units score 0–2` : "Unit health data unavailable",
       body: unitHealth ? `Average unit metric is ${unitHealth.average_metric?.toFixed(2) ?? "—"}; ${formatPct0(unitHealth.trained_rate)} meet the workbook’s training signal.` : "The selected council has no matching unit metric record.",
     },
@@ -118,13 +124,15 @@ function renderOverview(data, selected) {
   document.getElementById("nationalContext").innerHTML = [
     metricLine("Councils ranked", formatNumber(data.national.council_count)),
     metricLine("Current youth", formatNumber(data.national.current_youth)),
+    metricLine("TAY population", formatNumber(data.national.tay)),
+    metricLine("TAY penetration", `${formatPct(data.national.tay_pct)} · ${formatNumber(data.national.tay_covered_councils)} councils`),
     metricLine("Registered units", formatNumber(data.national.units)),
     metricLine("YOY movement", formatSigned(data.national.yoy_delta), classForValue(data.national.yoy_delta)),
     metricLine("Aggregate growth", formatSignedPct(data.national.yoy_pct), classForValue(data.national.yoy_pct)),
     metricLine("Councils growing", `${formatNumber(data.national.positive_growth_councils)} of ${formatNumber(data.national.council_count)}`),
   ].join("");
 
-  document.getElementById("sourceSummary").innerHTML = `${sourceLink(data)}<span>${escapeHtml(data.metadata.source_name)}, downloaded ${escapeHtml(dateFmt.format(new Date(data.metadata.source_downloaded_at)))}. Growth rates and ranks are recalculated from the workbook’s cached current, prior-year, and 2025 year-end council totals.</span>`;
+  document.getElementById("sourceSummary").innerHTML = `${sourceLink(data)}<span>${escapeHtml(data.metadata.source_name)}, downloaded ${escapeHtml(dateFmt.format(new Date(data.metadata.source_downloaded_at)))}. Growth rates and ranks are recalculated from the workbook’s cached current, prior-year, and 2025 year-end council totals. TAY penetration is current youth divided by the workbook's TAY value where supplied.</span>`;
 }
 
 function initOverview(data) {
@@ -151,17 +159,19 @@ function renderRankings(data) {
     yoy_pct_desc: (a, b) => b.yoy_pct - a.yoy_pct || a.council.localeCompare(b.council),
     current_youth_desc: (a, b) => b.current_youth - a.current_youth || a.council.localeCompare(b.council),
     year_end_rank: (a, b) => a.year_end_rank - b.year_end_rank || a.council.localeCompare(b.council),
+    tay_rank: (a, b) => a.tay_rank - b.tay_rank || a.council.localeCompare(b.council),
+    tay_pct_desc: (a, b) => b.tay_pct - a.tay_pct || a.council.localeCompare(b.council),
     name: (a, b) => a.council.localeCompare(b.council),
   };
   rows.sort(sorters[sort]);
   document.getElementById("rankingCount").textContent = `${formatNumber(rows.length)} councils`;
   document.getElementById("rankingRows").innerHTML = rows.length ? rows.map((record) => `<tr${record.council === focus.council ? ' class="focus-row"' : ""}>
-    <td>#${record.yoy_rank}</td><td><strong>${escapeHtml(record.council)}</strong></td><td class="num">${formatNumber(record.units)}</td><td class="num">${formatNumber(record.current_youth)}</td><td class="num">${formatNumber(record.prior_youth)}</td><td class="num ${classForValue(record.yoy_delta)}">${formatSigned(record.yoy_delta)}</td><td class="num ${classForValue(record.yoy_pct)}">${formatSignedPct(record.yoy_pct)}</td><td class="num ${classForValue(record.year_end_pct)}">${formatSignedPct(record.year_end_pct)}</td><td><a class="detail-link" href="index.html?council=${record.council_number}">Overview</a></td>
-  </tr>`).join("") : '<tr><td colspan="9" class="empty-state">No councils match these filters.</td></tr>';
+    <td>#${record.yoy_rank}</td><td><strong>${escapeHtml(record.council)}</strong></td><td class="num">${formatNumber(record.units)}</td><td class="num">${formatNumber(record.current_youth)}</td><td class="num">${formatNumber(record.prior_youth)}</td><td class="num ${classForValue(record.yoy_delta)}">${formatSigned(record.yoy_delta)}</td><td class="num ${classForValue(record.yoy_pct)}">${formatSignedPct(record.yoy_pct)}</td><td class="num ${classForValue(record.year_end_pct)}">${formatSignedPct(record.year_end_pct)}</td><td class="num">${formatPct(record.tay_pct)}</td><td class="num">${formatRank(record.tay_rank)}</td><td><a class="detail-link" href="index.html?council=${record.council_number}">Overview</a></td>
+  </tr>`).join("") : '<tr><td colspan="11" class="empty-state">No councils match these filters.</td></tr>';
   document.getElementById("rankingKpis").innerHTML = [
     kpiCard("Focus rank", `#${focus.yoy_rank}`, focus.council, "teal"),
     kpiCard("Focus growth", formatSignedPct(focus.yoy_pct), `${formatSigned(focus.yoy_delta)} youth`, tone(focus.yoy_pct)),
-    kpiCard("Visible councils", formatNumber(rows.length), scope === "peers" ? "Focus plus scale peers" : "Current search result"),
+    kpiCard("Focus TAY penetration", formatPct(focus.tay_pct), `Rank ${formatRank(focus.tay_rank)}`, "teal"),
     kpiCard("National growth", formatSignedPct(data.national.yoy_pct), `${formatSigned(data.national.yoy_delta)} youth`, tone(data.national.yoy_pct)),
   ].join("");
 }
