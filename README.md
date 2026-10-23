@@ -23,3 +23,9 @@ python3 scripts/check_data_quality.py
 Retention is copied from the workbook model without a 100% ceiling. Values above 100% are valid and must not be clamped during extraction, validation, or rendering.
 
 Serve locally with any static web server, then open `index.html` through that server.
+
+## Visual identity
+
+The design follows the supplied *Scouting America Brand Guidelines (2024)*, pages 11 and 14–16. It uses the primary blue (`#003F87`), red (`#CE1126`), tan, gray, and white, with approved secondary colors and Arial typography. The signature image is unaltered artwork extracted from page 11, displayed proportionally on white with clear space of at least one fleur-de-lis height.
+
+The site follows the system light/dark preference through `prefers-color-scheme`. Dark mode uses the guide's dark gray, dark blue, and pale blue. Red is never tinted. Signed negative values remain explicit in both themes. Branding changes do not require rebuilding the workbook payload.
