@@ -109,6 +109,7 @@ def main() -> int:
             "matched_to_rankings": len(names & council_names),
             "missing_from_metrics": sorted(council_names - names),
             "metrics_without_ranking": sorted(names - council_names),
+            "duplicate_rows": len(records) - len(names),
         }
         for record in records:
             for field in RATE_FIELDS:
@@ -125,7 +126,7 @@ def main() -> int:
     join_failures = {
         program: summary
         for program, summary in join_summary.items()
-        if summary["missing_from_metrics"] or summary["metrics_without_ranking"]
+        if summary["missing_from_metrics"] or summary["metrics_without_ranking"] or summary["duplicate_rows"]
     }
     if join_failures:
         findings.append(issue(
@@ -137,7 +138,7 @@ def main() -> int:
         ))
     if range_issues:
         findings.append(issue(
-            "medium",
+            "high",
             "Aggregate metric rates fall outside their expected 0–100% range",
             {"count": len(range_issues), "samples": range_issues[:20]},
             "Rate cards and comparisons may be misleading.",
@@ -145,7 +146,7 @@ def main() -> int:
         ))
     if count_reconciliation_issues:
         findings.append(issue(
-            "medium",
+            "high",
             "Unit metric buckets do not sum to the reported unit count",
             {"count": len(count_reconciliation_issues), "samples": count_reconciliation_issues[:20]},
             "The health-mix chart could understate or overstate a category.",
@@ -162,7 +163,7 @@ def main() -> int:
                 pin_range_issues.append({"council": record["council"], "field": field, "value": value})
     if pin_range_issues:
         findings.append(issue(
-            "medium",
+            "high",
             "Unit PIN rates fall outside 0–100%",
             {"count": len(pin_range_issues), "samples": pin_range_issues[:20]},
             "PIN readiness cards may be misleading.",

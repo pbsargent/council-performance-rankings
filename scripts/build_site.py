@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -294,7 +295,7 @@ def summarize_program(program: str, records: list[dict[str, Any]]) -> dict[str, 
     }
 
 
-def build_payload(source: Path) -> dict[str, Any]:
+def build_payload(source: Path, downloaded_at: datetime | None = None) -> dict[str, Any]:
     reader = XlsxReader(source)
     try:
         councils, selected_name = extract_councils(reader, "Councils")
@@ -353,7 +354,9 @@ def build_payload(source: Path) -> dict[str, Any]:
     national_delta = national_current - national_prior
     national_ye_delta = national_current - national_year_end
     source_stat = source.stat()
-    downloaded = datetime.fromtimestamp(source_stat.st_birthtime, CHICAGO)
+    downloaded = downloaded_at or datetime.fromtimestamp(
+        getattr(source_stat, "st_birthtime", source_stat.st_mtime), CHICAGO
+    )
     generated = datetime.now(CHICAGO)
 
     selected_metrics = {
@@ -369,10 +372,11 @@ def build_payload(source: Path) -> dict[str, Any]:
             "title": "Council Performance Rankings",
             "source_name": source.name,
             "source_url": SOURCE_WORKBOOK_URL,
+            "source_sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
             "source_downloaded_at": downloaded.isoformat(),
             "generated_at": generated.isoformat(),
             "selected_council": selected_name,
-            "methodology_version": "1.0",
+            "methodology_version": "1.1",
             "privacy": "Council-level aggregates only; unit-level workbook rows are not published.",
         },
         "national": {
@@ -421,6 +425,8 @@ def main() -> int:
     args = parser.parse_args()
     if not args.source.is_file():
         raise SystemExit(f"Source workbook not found: {args.source}")
+    from source_contract import inspect_source
+    inspect_source(args.source)
     payload = build_payload(args.source)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
