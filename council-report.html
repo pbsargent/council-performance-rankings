@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Print a council's details and peer comparison from the published Council Performance Rankings.">
+  <title>Council Details and Peer Comparison</title>
+  <link rel="stylesheet" href="assets/dashboard.css?v=20261111-report">
+</head>
+<body data-page="council-report">
+  <main class="report-main">
+    <nav class="report-actions board-actions" aria-label="Report actions">
+      <a class="detail-link" href="cst.html">CST Dashboard</a>
+      <button class="detail-link" id="printReport" type="button" disabled>Print / Save as PDF</button>
+    </nav>
+    <p id="reportStatus" role="status">Loading council report…</p>
+    <template id="reportBrand"><img src="assets/scouting-america-signature.png" alt="Scouting America" width="660" height="110"></template>
+    <div id="reportContent"></div>
+  </main>
+  <script src="assets/dashboard.js?v=20261111-report"></script>
+</body>
+</html>

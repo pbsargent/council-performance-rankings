@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore Scouting council service territories and the councils assigned to each CST.">
+  <title>CST Dashboard · Council Performance Rankings</title>
+  <link rel="stylesheet" href="assets/dashboard.css?v=20261104-cst">
+</head>
+<body data-page="cst">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Council ranking navigation">
+      <a class="brand" href="index.html" aria-label="Council Rankings home"><img src="assets/scouting-america-signature.png" alt="Scouting America" width="660" height="110"><span>Council Rankings</span></a>
+      <nav>
+        <a href="index.html">Overview</a>
+        <a href="rankings.html">National Rankings</a>
+        <a class="active" aria-current="page" href="cst.html">CST Dashboard</a>
+        <a href="unit-health.html">Unit Health</a>
+        <a href="about.html">Methodology</a>
+      </nav>
+      <div class="sidebar-note"><span>Workbook refresh</span><strong data-source-date>Loading…</strong></div>
+    </aside>
+    <main>
+      <header class="hero compact-hero">
+        <div><p class="eyebrow">Council service territories</p><h1 id="cstTitle">CST Dashboard</h1><p class="lede" id="cstSubtitle">Membership performance and council details by territory.</p></div>
+      </header>
+
+      <nav class="panel cst-navigation" aria-label="Select a CST"><div class="panel-head"><h2>Explore a CST</h2></div><div class="cst-links" id="cstLinks"></div></nav>
+      <section class="toolbar cst-toolbar" aria-label="CST council filters">
+        <label class="control"><span>Search within this view</span><input id="cstSearch" type="search" placeholder="Council name or number"></label>
+        <label class="control"><span>Sort councils by</span><select id="cstSort"><option value="name">Council name</option><option value="growth">YOY growth</option><option value="youth">Current youth</option></select></label>
+        <button class="detail-link" id="cstReset" type="button">Reset filters</button>
+      </section>
+      <p class="panel-intro" id="cstScope" role="status"></p>
+      <section class="kpi-grid" id="cstKpis" aria-label="Territory membership summary"></section>
+
+      <section class="panel">
+        <div class="panel-head"><div><p class="section-kicker">Membership movement</p><h2 id="cstChartTitle">Year-over-Year Growth</h2></div></div>
+        <p class="panel-intro">Change from prior-year youth membership. Bars share a zero baseline; signed values show direction.</p>
+        <div class="chart-list" id="cstGrowthChart"></div>
+      </section>
+
+      <section class="panel cst-board" aria-labelledby="cstBoardTitle">
+        <div class="panel-head"><div><p class="section-kicker">Council details</p><h2 id="cstBoardTitle">Councils by CST</h2></div><div class="board-actions"><button class="detail-link" id="cstCollapse" type="button">Collapse all</button><button class="detail-link" id="cstExpand" type="button">Expand all</button></div></div>
+        <p class="panel-intro">Expand a territory, then a council for membership, market context, program metrics, and BeAScout indicators. Each council belongs to one source-assigned CST.</p>
+        <div id="cstGroups"></div>
+      </section>
+
+      <section class="panel source-panel">
+        <div><p class="section-kicker">Source and coverage</p><h2>Territory calculation basis</h2></div>
+        <p id="cstSource">Loading source metadata…</p>
+      </section>
+    </main>
+  </div>
+  <script src="assets/dashboard.js?v=20261111-report"></script>
+</body>
+</html>
